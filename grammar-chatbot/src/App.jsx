@@ -10,7 +10,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  // ✅ تجزئة النص إلى مقاطع
   const splitTextIntoChunks = (text) => {
     const minChunkSize = 300;
     const maxChunkSize = 500;
@@ -32,7 +31,6 @@ function App() {
     return newChunks;
   };
 
-  // ✅ تحميل ملف النحو
   useEffect(() => {
     const fetchNa7wText = async () => {
       try {
@@ -48,7 +46,6 @@ function App() {
     fetchNa7wText();
   }, []);
 
-  // ✅ تقسيم النص إلى مقاطع بعد التحميل
   useEffect(() => {
     if (contextText) {
       const newChunks = splitTextIntoChunks(contextText);
@@ -57,7 +54,6 @@ function App() {
     }
   }, [contextText]);
 
-  // ✅ إرسال الرسالة
   const handleSendMessage = async () => {
     if (input.trim()) {
       const userMessage = { text: input, isUser: true };
@@ -70,7 +66,6 @@ function App() {
         const relevantChunks = [];
         const maxChunks = 5;
 
-        // ✅ تحسين البحث: بدلاً من `includes` فقط، نستخدم دوال أقوى
         for (const chunk of chunks) {
           const normalizedChunk = chunk.toLowerCase();
           if (
@@ -95,15 +90,14 @@ function App() {
           const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question: input }),
+            body: JSON.stringify({ prompt: input }), // ✅ هنا التعديل
           });
 
           if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
           const data = await response.json();
-          aiResponse = data.response || "❌ حدث خطأ أثناء توليد الرد.";
+          aiResponse = data.reply || "❌ حدث خطأ أثناء توليد الرد.";
         }
 
-        // ✅ تقسيم الرد إلى أسطر منفصلة لكل فقاعة
         const aiLines = aiResponse.split('\n').filter(line => line.trim() !== '');
         aiLines.forEach((line) => {
           setMessages((prevMessages) => [...prevMessages, { text: line, isUser: false }]);
