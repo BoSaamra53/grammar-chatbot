@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
   // 3. يستخدم مكتبة axios لإرسال POST request لـ Gemini API.
   // 4. يقرأ مفتاح API من process.env.GEMINI_API_KEY.
-  const GEMINI_API_KEY = 'AIzaSyCuSo7Ehty5yv8Y8g1Q3CuWqJDi9XIzX0o';
+  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
   if (!GEMINI_API_KEY) {
     return res.status(500).json({ error: 'GEMINI_API_KEY is not set' });
   }
